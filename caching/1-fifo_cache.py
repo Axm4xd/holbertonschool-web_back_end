@@ -50,11 +50,10 @@ class FIFOCache(BaseCaching):
         if key is not None and item is not None:
             if key not in self.cache_data:
                 if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                    # FIFO - Discard the first added item (first in)
-                    keydel = list(self.cache_data.keys())[0]  # Get the first key in the cache
-                    del self.cache_data[keydel]  # Delete the first element
+                    keydel = list(self.cache_data.keys())[0]
+                    del self.cache_data[keydel]
                     print(f"DISCARD: {keydel}")
-            self.cache_data[key] = item  # Add the new item to the cache
+            self.cache_data[key] = item
 
     def get(self, key):
         """
