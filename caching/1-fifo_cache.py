@@ -10,7 +10,7 @@ class FIFOCache(BaseCaching):
     """ FIFOCache define a FIFO algorithm to use cache
 
       To use:
-      >>> my_cache = BasicCache()
+      >>> my_cache = FIFOCache()
       >>> my_cache.print_cache()
       Current cache:
 
@@ -35,38 +35,36 @@ class FIFOCache(BaseCaching):
     """
 
     def __init__(self):
-        """ Initiliaze
-        """
+        """ Initialize """
         super().__init__()
 
     def put(self, key, item):
         """
-            modify cache data
+            Modify cache data
 
             Args:
-                key: of the dict
+                key: key of the cache
                 item: value of the key
         """
-        if key or item is not None:
-            valuecache = self.get(key)
-            if valuecache is None:
+        if key is not None and item is not None:
+            # If the key doesn't exist in cache, we check if we need to discard the first element
+            if key not in self.cache_data:
                 if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                    keydel = list(self.cache_data.keys())[0]
-                    del self.cache_data[keydel]
+                    # FIFO - Discard the first added item
+                    keydel = list(self.cache_data.keys())[0]  # Get the first key in the cache
+                    del self.cache_data[keydel]  # Delete it
                     print("DISCARD: {}".format(keydel))
 
-            self.cache_data[key] = item
+            self.cache_data[key] = item  # Add the new item to the cache
 
     def get(self, key):
         """
-            modify cache data
+            Get cache data by key
 
             Args:
-                key: of the dict
+                key: key of the cache
 
             Return:
                 value of the key
         """
-
-        valuecache = self.cache_data.get(key)
-        return valuecache
+        return self.cache_data.get(key)
