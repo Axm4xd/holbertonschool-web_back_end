@@ -46,4 +46,3 @@ class BasicCache(BaseCaching):
         """
         # Return the value from the cache, or None if the key doesn't exist
         return self.cache_data.get(key)
-

@@ -2,25 +2,18 @@
 """
     BaseCache module
 """
-
 from base_caching import BaseCaching
-
-
 class FIFOCache(BaseCaching):
     """ FIFOCache define a FIFO algorithm to use cache
-
       To use:
       >>> my_cache = FIFOCache()
       >>> my_cache.print_cache()
       Current cache:
-
       >>> my_cache.put("A", "Hello")
       >>> my_cache.print_cache()
       A: Hello
-
       >>> print(my_cache.get("A"))
       Hello
-
       Ex:
       >>> print(self.cache_data)
       {A: "Hello", B: "World", C: "Holberton", D: "School"}
@@ -33,11 +26,9 @@ class FIFOCache(BaseCaching):
       >>> print(self.cache_data)
       {F: "COD", B: "World", C: "Holberton", D: "School"}
     """
-
     def __init__(self):
         """ Initialize """
         super().__init__()
-
     def put(self, key, item):
         """
             Modify cache data
@@ -54,9 +45,7 @@ class FIFOCache(BaseCaching):
                     keydel = list(self.cache_data.keys())[0]  # Get the first key in the cache
                     del self.cache_data[keydel]  # Delete it
                     print("DISCARD: {}".format(keydel))
-
             self.cache_data[key] = item  # Add the new item to the cache
-
     def get(self, key):
         """
             Get cache data by key
