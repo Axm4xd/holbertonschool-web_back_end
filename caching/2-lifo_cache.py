@@ -2,43 +2,32 @@
 """
     BaseCache module
 """
-
 from base_caching import BaseCaching
-
-
 class LIFOCache(BaseCaching):
-    """ LIFOCache defines a LIFO (Last In, First Out) algorithm for the cache.
-    
+    """ LIFOCache defines a LIFO (Last In, First Out) algorithm for the cache.   
     To use:
     >>> my_cache = LIFOCache()
     >>> my_cache.print_cache()
-    Current cache:
-    
+    Current cache:   
     >>> my_cache.put("A", "Hello")
     >>> my_cache.print_cache()
-    A: Hello
-    
+    A: Hello   
     >>> print(my_cache.get("A"))
     Hello
-
     Example:
     >>> print(self.cache_data)
-    {A: "Hello", B: "World", C: "Holberton", D: "School"}
-    
+    {A: "Hello", B: "World", C: "Holberton", D: "School"}   
     >>> my_cache.put("C", "Street")
     >>> print(self.cache_data)
     {A: "Hello", B: "World", C: "Street", D: "School"}
-
     >>> my_cache.put("F", "COD")
     DISCARD: D
     >>> print(self.cache_data)
     {A: "Hello", B: "World", C: "Holberton", F: "COD"}
     """
-    
     def __init__(self):
         """ Initialize the LIFO cache """
         super().__init__()
-
     def put(self, key, item):
         """
             Add an item to the cache.
@@ -56,7 +45,6 @@ class LIFOCache(BaseCaching):
                     del self.cache_data[keydel]  # Delete the last element
                     print(f"DISCARD: {keydel}")
             self.cache_data[key] = item  # Add the new item to the cache
-
     def get(self, key):
         """
             Retrieve an item from the cache by key.
