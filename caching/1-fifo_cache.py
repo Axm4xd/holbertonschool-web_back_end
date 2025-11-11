@@ -8,23 +8,23 @@ from base_caching import BaseCaching
 
 class FIFOCache(BaseCaching):
     """ FIFOCache defines a FIFO (First In, First Out) algorithm for the cache.
-    
+
     To use:
     >>> my_cache = FIFOCache()
     >>> my_cache.print_cache()
     Current cache:
-    
+
     >>> my_cache.put("A", "Hello")
     >>> my_cache.print_cache()
     A: Hello
-    
+
     >>> print(my_cache.get("A"))
     Hello
 
     Example:
     >>> print(self.cache_data)
     {A: "Hello", B: "World", C: "Holberton", D: "School"}
-    
+
     >>> my_cache.put("C", "Street")
     >>> print(self.cache_data)
     {A: "Hello", B: "World", C: "Street", D: "School"}
@@ -34,7 +34,7 @@ class FIFOCache(BaseCaching):
     >>> print(self.cache_data)
     {F: "COD", B: "World", C: "Holberton", D: "School"}
     """
-    
+
     def __init__(self):
         """ Initialize the FIFO cache """
         super().__init__()
@@ -48,7 +48,6 @@ class FIFOCache(BaseCaching):
                 item: the value associated with the key
         """
         if key is not None and item is not None:
-            # If the key doesn't exist in cache, we check if we need to discard the first element
             if key not in self.cache_data:
                 if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
                     # FIFO - Discard the first added item (first in)
