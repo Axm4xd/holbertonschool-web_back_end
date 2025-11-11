@@ -31,27 +31,22 @@ class LIFOCache(BaseCaching):
     def put(self, key, item):
         """
             Add an item to the cache.
-
             Args:
                 key: the key of the cache
                 item: the value associated with the key
         """
         if key is not None and item is not None:
-            # If the key doesn't exist in cache, we check if we need to discard the last element
             if key not in self.cache_data:
                 if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                    # LIFO - Discard the last added item (last in)
-                    keydel = list(self.cache_data.keys())[-1]  # Get the last key in the cache
-                    del self.cache_data[keydel]  # Delete the last element
+                    keydel = list(self.cache_data.keys())[-1] 
+                    del self.cache_data[keydel]  
                     print(f"DISCARD: {keydel}")
-            self.cache_data[key] = item  # Add the new item to the cache
+            self.cache_data[key] = item  
     def get(self, key):
         """
             Retrieve an item from the cache by key.
-
             Args:
                 key: the key of the cache
-
             Return:
                 value associated with the key, or None if the key doesn't exist
         """
