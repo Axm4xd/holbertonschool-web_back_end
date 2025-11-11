@@ -1,79 +1,61 @@
 #!/usr/bin/python3
 """
-    MRUCache module
+MRU Caching
 """
 from base_caching import BaseCaching
-from collections import OrderedDict
+
 
 class MRUCache(BaseCaching):
-    """ MRUCache defines a Most Recently Used algorithm for cache.
-    
-    To use:
-    >>> my_cache = MRUCache()
-    >>> my_cache.print_cache()
-    Current cache:
-    
-    >>> my_cache.put("A", "Hello")
-    >>> my_cache.print_cache()
-    A: Hello
-    
-    >>> print(my_cache.get("A"))
-    Hello
-
-    Example:
-    >>> print(self.cache_data)
-    {A: "Hello", B: "World", C: "Holberton", D: "School"}
-    
-    >>> my_cache.put("C", "Street")
-    >>> print(self.cache_data)
-    {A: "Hello", B: "World", C: "Street", D: "School"}
-
-    >>> my_cache.put("E", "Battery")
-    DISCARD: C
-    >>> print(self.cache_data)
-    {A: "Hello", B: "World", D: "School", E: "Battery"}
+    """
+    Class that inherits from BaseCaching and is a caching system
     """
 
     def __init__(self):
-        """ Initialize the MRU cache """
         super().__init__()
-        self.cache_data = OrderedDict()
+        self.head, self.tail = '-', '='
+        self.next, self.prev = {}, {}
+        self.handle(self.head, self.tail)
+
+    def handle(self, head, tail):
+        """
+        handle elements
+        """
+        self.next[head], self.prev[tail] = tail, head
+
+    def _remove(self, key):
+        """
+        remove element
+        """
+        self.handle(self.prev[key], self.next[key])
+        del self.prev[key], self.next[key], self.cache_data[key]
+
+    def _add(self, key, item):
+        """
+        add element
+        """
+        if len(self.cache_data) > BaseCaching.MAX_ITEMS - 1:
+            print("DISCARD: {}".format(self.prev[self.tail]))
+            self._remove(self.prev[self.tail])
+        self.cache_data[key] = item
+        self.handle(self.prev[self.tail], key)
+        self.handle(key, self.tail)
 
     def put(self, key, item):
+        """dictionary
         """
-            Add an item to the cache.
-
-            Args:
-                key: the key of the cache
-                item: the value associated with the key
-        """
-        if key is None or item is None:
-            return
-        
-        # If the cache is full, discard the most recently used item
-        if key not in self.cache_data:
-            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                # Remove the most recently used (last) item
-                discarded_key, discarded_value = self.cache_data.popitem(last=True)
-                print(f"DISCARD: {discarded_key}")
-        
-        # Insert or update the key-value pair, making it the most recently used
-        self.cache_data[key] = item
-        self.cache_data.move_to_end(key)  # Move the key to the end (most recently used)
+        if key and item:
+            if key in self.cache_data:
+                self._remove(key)
+            self._add(key, item)
 
     def get(self, key):
         """
-            Get an item from the cache by key.
-
-            Args:
-                key: the key of the cache
-
-            Return:
-                value associated with the key, or None if the key doesn't exist
+        Return the value linked
         """
-        if key is None or key not in self.cache_data:
+        if key is None or self.cache_data.get(key) is None:
             return None
-        
-        # Move the accessed key to the end to mark it as most recently used
-        self.cache_data.move_to_end(key)
-        return self.cache_data[key]
+        if key in self.cache_data:
+            value = self.cache_data[key]
+            self._remove(key)
+            self._add(key, value)
+            return value
