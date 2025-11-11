@@ -1,83 +1,79 @@
 #!/usr/bin/python3
 """
-    MRU module
+    MRUCache module
 """
-
 from base_caching import BaseCaching
-
+from collections import OrderedDict
 
 class MRUCache(BaseCaching):
-    """ MRUCache define MRU algorithm to use cache
+    """ MRUCache defines a Most Recently Used algorithm for cache.
+    
+    To use:
+    >>> my_cache = MRUCache()
+    >>> my_cache.print_cache()
+    Current cache:
+    
+    >>> my_cache.put("A", "Hello")
+    >>> my_cache.print_cache()
+    A: Hello
+    
+    >>> print(my_cache.get("A"))
+    Hello
 
-      To use:
-      >>> my_cache = BasicCache()
-      >>> my_cache.print_cache()
-      Current cache:
+    Example:
+    >>> print(self.cache_data)
+    {A: "Hello", B: "World", C: "Holberton", D: "School"}
+    
+    >>> my_cache.put("C", "Street")
+    >>> print(self.cache_data)
+    {A: "Hello", B: "World", C: "Street", D: "School"}
 
-      >>> my_cache.put("A", "Hello")
-      >>> my_cache.print_cache()
-      A: Hello
-
-      Ex:
-      >>> my_cache.print_cache()
-      Current cache:
-      A: Hello
-      B: World
-      C: Holberton
-      D: School
-      >>> print(my_cache.get("B"))
-      World
-      DISCARD: B
+    >>> my_cache.put("E", "Battery")
+    DISCARD: C
+    >>> print(self.cache_data)
+    {A: "Hello", B: "World", D: "School", E: "Battery"}
     """
 
     def __init__(self):
-        """ Initiliaze
-        """
+        """ Initialize the MRU cache """
         super().__init__()
-        self.leastrecent = []
+        self.cache_data = OrderedDict()
 
     def put(self, key, item):
         """
-            modify cache data
+            Add an item to the cache.
 
             Args:
-                key: of the dict
-                item: value of the key
+                key: the key of the cache
+                item: the value associated with the key
         """
-        if key or item is not None:
-            valuecache = self.get(key)
-            # Make a new
-            if valuecache is None:
-                if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                    keydel = self.leastrecent
-                    lendel = len(keydel) - 1
-                    del self.cache_data[keydel[lendel]]
-                    print("DISCARD: {}".format(self.leastrecent.pop()))
-            else:
-                del self.cache_data[key]
-
-            if key in self.leastrecent:
-                self.leastrecent.remove(key)
-                self.leastrecent.append(key)
-            else:
-                self.leastrecent.append(key)
-
-            self.cache_data[key] = item
+        if key is None or item is None:
+            return
+        
+        # If the cache is full, discard the most recently used item
+        if key not in self.cache_data:
+            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
+                # Remove the most recently used (last) item
+                discarded_key, discarded_value = self.cache_data.popitem(last=True)
+                print(f"DISCARD: {discarded_key}")
+        
+        # Insert or update the key-value pair, making it the most recently used
+        self.cache_data[key] = item
+        self.cache_data.move_to_end(key)  # Move the key to the end (most recently used)
 
     def get(self, key):
         """
-            modify cache data
+            Get an item from the cache by key.
 
             Args:
-                key: of the dict
+                key: the key of the cache
 
             Return:
-                value of the key
+                value associated with the key, or None if the key doesn't exist
         """
-        valuecache = self.cache_data.get(key)
-
-        if valuecache:
-            self.leastrecent.remove(key)
-            self.leastrecent.append(key)
-
-        return valuecache
+        if key is None or key not in self.cache_data:
+            return None
+        
+        # Move the accessed key to the end to mark it as most recently used
+        self.cache_data.move_to_end(key)
+        return self.cache_data[key]
